@@ -199,13 +199,16 @@ async def startup():
         logger.info("Object storage initialized")
     except Exception as e:
         logger.warning(f"Storage init failed (will retry on upload): {e}")
-    # Write test credentials
-    os.makedirs("/app/memory", exist_ok=True)
-    with open("/app/memory/test_credentials.md", "w") as f:
-        f.write("# Test Credentials\n\n")
-        f.write(f"## Admin\n- Email: {os.environ.get('ADMIN_EMAIL', 'admin@umkm.com')}\n- Password: {os.environ.get('ADMIN_PASSWORD', 'admin123')}\n- Role: admin\n\n")
-        f.write("## Auth Endpoints\n- POST /api/auth/login\n- POST /api/auth/logout\n- GET /api/auth/me\n\n")
-        f.write("## UMKM Endpoints\n- GET /api/umkm\n- POST /api/umkm (admin)\n- PUT /api/umkm/{id} (admin)\n- DELETE /api/umkm/{id} (admin)\n- POST /api/upload (admin)\n- GET /api/files/{path}\n")
+    # Write test credentials (only in dev environment)
+    try:
+        os.makedirs("/app/memory", exist_ok=True)
+        with open("/app/memory/test_credentials.md", "w") as f:
+            f.write("# Test Credentials\n\n")
+            f.write(f"## Admin\n- Email: {os.environ.get('ADMIN_EMAIL', 'admin@umkm.com')}\n- Password: {os.environ.get('ADMIN_PASSWORD', 'admin123')}\n- Role: admin\n\n")
+            f.write("## Auth Endpoints\n- POST /api/auth/login\n- POST /api/auth/logout\n- GET /api/auth/me\n\n")
+            f.write("## UMKM Endpoints\n- GET /api/umkm\n- POST /api/umkm (admin)\n- PUT /api/umkm/{id} (admin)\n- DELETE /api/umkm/{id} (admin)\n- POST /api/upload (admin)\n- GET /api/files/{path}\n")
+    except Exception:
+        pass  # Skip in production if /app/memory doesn't exist
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
