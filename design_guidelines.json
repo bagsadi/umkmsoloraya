@@ -1,0 +1,102 @@
+{
+  "theme": "light",
+  "archetype": "1 (Organic & Earthy / Modern Clean E-commerce)",
+  "typography": {
+    "font_family": "Poppins, sans-serif",
+    "instructions": "Import Poppins from Google Fonts in index.html: <link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap\" rel=\"stylesheet\">. Apply to the entire document body.",
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-slate-800",
+      "h3": "text-xl sm:text-2xl font-medium text-slate-800",
+      "body": "text-base text-slate-600 leading-relaxed",
+      "small": "text-sm text-slate-500",
+      "overline": "text-xs font-semibold tracking-[0.2em] uppercase text-green-600"
+    }
+  },
+  "colors": {
+    "primary": {
+      "base": "#16A34A",
+      "hover": "#15803D",
+      "foreground": "#FFFFFF",
+      "tailwind": "green-600"
+    },
+    "secondary": {
+      "base": "#F8FAFC",
+      "foreground": "#1E293B",
+      "tailwind": "slate-50"
+    },
+    "accent": {
+      "rating": "#F59E0B",
+      "rating_tailwind": "amber-500",
+      "badge_promo": "#F97316",
+      "badge_promo_tailwind": "orange-500"
+    },
+    "surface": {
+      "background": "#FFFFFF",
+      "card": "#FFFFFF",
+      "border": "#E2E8F0"
+    }
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous Spacing. Use p-6 or p-8 inside cards. Use gap-8 for grids.",
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "grids": {
+      "homepage_categories": "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 or gap-6",
+      "umkm_cards": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    },
+    "card_style": "bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
+  },
+  "components": {
+    "header": "Sticky header (z-50) with glassmorphism: backdrop-blur-xl bg-white/80 border-b border-slate-200. Contains Logo, Nav Links, Login CTA.",
+    "footer": "Generous padding (py-16), bg-slate-900 text-slate-300, links in Poppins.",
+    "umkm_card": "Card UI with top image (max-h-48 object-cover). Badges positioned absolute top-3 left-3 (Badge: bg-orange-500 text-white font-bold px-2 py-1 rounded-md text-xs uppercase). Rating displayed with Lucide Star icon (fill-amber-500 text-amber-500) and number. Title, Category, and short description below image.",
+    "sidebar_filter": "Sticky on desktop. Clean list of categories (Kuliner, Fashion, Handmade, Jasa Event, Jasa Otomotif) with hover state (bg-green-50 text-green-700 rounded-lg).",
+    "search_bar": "Prominent real-time search input with a search icon. Use Shadcn Input with rounded-full or rounded-xl.",
+    "pagination": "Clean numbered pagination at the bottom of the listing page. Active page uses bg-green-600 text-white.",
+    "admin_dashboard": "Sidebar for navigation. Data table for UMKMs. Dialog/Modal for 'Tambah UMKM' form.",
+    "buttons": "Rounded-xl or rounded-lg. Primary uses bg-green-600 hover:bg-green-700 text-white. Transition transform hover:-translate-y-0.5"
+  },
+  "media": {
+    "hero_background": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/96188705-1cf2-4eba-98e8-383d37a16b05/images/a86e6c101a4029c32d11a43c18955943ea42d4fc7f53faf5bac7541c83f3c634.png",
+      "description": "Vibrant Indonesian market background for Homepage Hero. Add a bg-black/40 overlay to ensure text readability.",
+      "category": "hero"
+    },
+    "category_kuliner": {
+      "url": "https://images.unsplash.com/photo-1539755530862-00f623c00f52?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwZm9vZHxlbnwwfHx8fDE3NzYxNzY5Mjd8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Category image for Kuliner (Food)",
+      "category": "placeholder"
+    },
+    "category_fashion": {
+      "url": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwxfHxjbG90aGluZyUyMHN0b3JlfGVufDB8fHx8MTc3NjE3NjkyN3ww&ixlib=rb-4.1.0&q=85",
+      "description": "Category image for Fashion",
+      "category": "placeholder"
+    },
+    "category_handmade": {
+      "url": "https://images.unsplash.com/photo-1506806732259-39c2d0268443?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwxfHxoYW5kbWFkZSUyMGNyYWZ0c3xlbnwwfHx8fDE3NzYxNzY5Mjd8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Category image for Handmade",
+      "category": "placeholder"
+    },
+    "category_event": {
+      "url": "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwxfHxldmVudCUyMGRlY29yYXRpb258ZW58MHx8fHwxNzc2MTc2OTQxfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Category image for Jasa Event",
+      "category": "placeholder"
+    },
+    "category_otomotif": {
+      "url": "https://images.unsplash.com/photo-1645445522156-9ac06bc7a767?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHwxfHxjYXIlMjBtZWNoYW5pY3xlbnwwfHx8fDE3NzYxNzY5NDB8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Category image for Jasa Otomotif",
+      "category": "placeholder"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Use standard Tailwind CSS classes matching the specified color palette (Green-600 as primary).",
+    "Install and use 'lucide-react' for all icons.",
+    "Use Shadcn UI components heavily: Card, Button, Input, Select, Dialog (for adding UMKM), Table, Pagination, Badge.",
+    "Ensure 'Poppins' font is loaded globally.",
+    "In the Admin Dashboard 'Kelola UMKM' section, the image input should be a text field allowing the admin to paste Google Drive image URLs. Display these URLs directly in the UMKM cards.",
+    "Add 'data-testid' attributes to all interactive elements for testing (e.g., data-testid='login-button', data-testid='search-input').",
+    "For the MVP demo data, use the category placeholder URLs provided in the media section for initial UMKM entries.",
+    "Implement real-time search and sidebar category filtering on the UMKM listing page.",
+    "Ensure badges (Viral, Best Seller, Termurah) are distinct orange labels overlaying the top of the UMKM card images."
+  ]
+}
