@@ -258,7 +258,7 @@ async def download_file(path: str):
 @api_router.get("/umkm")
 async def list_umkm(
     page: int = Query(1, ge=1),
-    limit: int = Query(9, ge=1, le=50),
+    limit: int = Query(9, ge=1, le=200),
     search: str = Query("", description="Search by name"),
     kategori: str = Query("", description="Filter by category"),
     badge: str = Query("", description="Filter by badge"),
