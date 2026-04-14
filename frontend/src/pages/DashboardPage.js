@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { Link } from "react-router-dom";
+import { useAuth, getAuthHeaders } from "@/context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   Store, Plus, Pencil, Trash2, Upload, LogOut, Home, LayoutDashboard,
-  Star, TrendingUp, Search, BarChart3, Image
+  Star, TrendingUp, Search, BarChart3
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -45,6 +45,7 @@ const emptyForm = {
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [stats, setStats] = useState({ total_umkm: 0, kategori_stats: {} });
   const [loading, setLoading] = useState(true);
@@ -59,24 +60,32 @@ export default function DashboardPage() {
 
   const getAuthConfig = useCallback(() => ({
     withCredentials: true,
-    headers: user?.token ? { Authorization: `Bearer ${user.token}` } : {},
-  }), [user]);
+    headers: { ...getAuthHeaders() },
+  }), []);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [umkmRes, statsRes] = await Promise.all([
-        axios.get(`${API}/umkm?limit=100`, getAuthConfig()),
-        axios.get(`${API}/stats`, getAuthConfig()),
-      ]);
+      const config = getAuthConfig();
+      const umkmRes = await axios.get(`${API}/umkm?limit=100`, config);
       setItems(umkmRes.data.items || []);
-      setStats(statsRes.data);
+      try {
+        const statsRes = await axios.get(`${API}/stats`, config);
+        setStats(statsRes.data);
+      } catch {
+        setStats({ total_umkm: umkmRes.data.total || 0, kategori_stats: {} });
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Failed to fetch data:", err);
     } finally {
       setLoading(false);
     }
   }, [getAuthConfig]);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -131,11 +140,23 @@ export default function DashboardPage() {
     }
     setSubmitting(true);
     try {
+      const payload = {
+        nama: form.nama,
+        kategori: form.kategori,
+        deskripsi: form.deskripsi,
+        alamat: form.alamat || "",
+        telepon: form.telepon || "",
+        harga_range: form.harga_range || "",
+        rating: parseFloat(form.rating) || 0,
+        badges: form.badges || [],
+        image_url: form.image_url || "",
+      };
+      const config = { ...getAuthConfig(), headers: { ...getAuthConfig().headers, "Content-Type": "application/json" } };
       if (editingItem) {
-        await axios.put(`${API}/umkm/${editingItem.id}`, form, getAuthConfig());
+        await axios.put(`${API}/umkm/${editingItem.id}`, payload, config);
         toast.success("UMKM berhasil diperbarui");
       } else {
-        await axios.post(`${API}/umkm`, form, getAuthConfig());
+        await axios.post(`${API}/umkm`, payload, config);
         toast.success("UMKM berhasil ditambahkan");
       }
       setDialogOpen(false);
@@ -200,7 +221,7 @@ export default function DashboardPage() {
             <p className="text-sm font-medium text-slate-900 truncate">{user?.name || "Admin"}</p>
             <p className="text-xs text-slate-500 truncate">{user?.email}</p>
           </div>
-          <Button data-testid="sidebar-logout-btn" variant="ghost" onClick={logout} className="w-full justify-start gap-2 text-slate-500 hover:text-red-600 rounded-lg text-sm">
+          <Button data-testid="sidebar-logout-btn" variant="ghost" onClick={handleLogout} className="w-full justify-start gap-2 text-slate-500 hover:text-red-600 rounded-lg text-sm">
             <LogOut className="w-4 h-4" />
             Keluar
           </Button>
@@ -217,7 +238,7 @@ export default function DashboardPage() {
             </div>
             <span className="text-lg font-bold text-slate-900">UMKM<span className="text-green-600">Hub</span></span>
           </Link>
-          <Button variant="ghost" size="sm" onClick={logout} className="text-slate-500">
+          <Button variant="ghost" size="sm" onClick={handleLogout} className="text-slate-500">
             <LogOut className="w-4 h-4" />
           </Button>
         </div>
@@ -243,20 +264,23 @@ export default function DashboardPage() {
                   <BarChart3 className="w-5 h-5 text-green-600" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-slate-900">{stats.total_umkm}</div>
+              <div className="text-2xl font-bold text-slate-900">{stats.total_umkm || items.length}</div>
               <div className="text-sm text-slate-500">Total UMKM</div>
             </div>
-            {Object.entries(stats.kategori_stats || {}).slice(0, 3).map(([key, val]) => (
-              <div key={key} className="bg-white rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-slate-500" />
+            {CATEGORIES.map((cat) => {
+              const count = stats.kategori_stats?.[cat.value] || items.filter(i => i.kategori === cat.value).length;
+              return (
+                <div key={cat.value} className="bg-white rounded-2xl border border-slate-200 p-5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center">
+                      <TrendingUp className="w-5 h-5 text-slate-500" />
+                    </div>
                   </div>
+                  <div className="text-2xl font-bold text-slate-900">{count}</div>
+                  <div className="text-sm text-slate-500">{cat.label}</div>
                 </div>
-                <div className="text-2xl font-bold text-slate-900">{val}</div>
-                <div className="text-sm text-slate-500">{KATEGORI_LABELS[key] || key}</div>
-              </div>
-            ))}
+              );
+            }).slice(0, 3)}
           </div>
 
           {/* Table */}

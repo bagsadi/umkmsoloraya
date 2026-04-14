@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Store, Menu, X, LogOut, LayoutDashboard } from "lucide-react";
@@ -8,7 +8,13 @@ import { useState } from "react";
 export default function Header() {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
 
   const navLinks = [
     { to: "/", label: "Beranda" },
@@ -54,7 +60,7 @@ export default function Header() {
                     Dashboard
                   </Button>
                 </Link>
-                <Button data-testid="logout-btn" variant="ghost" size="sm" onClick={logout} className="gap-2 text-slate-500 hover:text-red-600">
+                <Button data-testid="logout-btn" variant="ghost" size="sm" onClick={handleLogout} className="gap-2 text-slate-500 hover:text-red-600">
                   <LogOut className="w-4 h-4" />
                   Keluar
                 </Button>
@@ -94,7 +100,7 @@ export default function Header() {
             {user ? (
               <>
                 <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600">Dashboard</Link>
-                <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-red-600">Keluar</button>
+                <button onClick={() => { handleLogout(); setMobileOpen(false); }} className="block w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-red-600">Keluar</button>
               </>
             ) : (
               <Link to="/login" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 rounded-lg text-sm font-medium text-green-700">Masuk Admin</Link>
