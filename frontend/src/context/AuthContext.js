@@ -14,11 +14,22 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      setUser(false);
+      setLoading(false);
+      return;
+    }
     try {
-      const token = localStorage.getItem("auth_token");
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      const { data } = await axios.get(`${API}/auth/me`, { withCredentials: true, headers });
-      setUser({ ...data, token });
+      const { data } = await axios.get(`${API}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (data && data.email) {
+        setUser({ ...data, token });
+      } else {
+        localStorage.removeItem("auth_token");
+        setUser(false);
+      }
     } catch {
       localStorage.removeItem("auth_token");
       setUser(false);
@@ -32,7 +43,7 @@ export function AuthProvider({ children }) {
   }, [checkAuth]);
 
   const login = async (email, password) => {
-    const { data } = await axios.post(`${API}/auth/login`, { email, password }, { withCredentials: true });
+    const { data } = await axios.post(`${API}/auth/login`, { email, password });
     if (data.token) {
       localStorage.setItem("auth_token", data.token);
     }
@@ -43,7 +54,7 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       const headers = getAuthHeaders();
-      await axios.post(`${API}/auth/logout`, {}, { withCredentials: true, headers });
+      await axios.post(`${API}/auth/logout`, {}, { headers });
     } catch {
       // ignore
     }

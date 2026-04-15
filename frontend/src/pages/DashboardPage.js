@@ -59,7 +59,6 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const getAuthConfig = useCallback(() => ({
-    withCredentials: true,
     headers: { ...getAuthHeaders() },
   }), []);
 
