@@ -27,12 +27,20 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 # CORS
-frontend_url = os.environ.get('FRONTEND_URL', os.environ.get('CORS_ORIGINS', '*'))
-origins = [frontend_url] if frontend_url != '*' else ["*"]
+frontend_url = os.environ.get('FRONTEND_URL', '')
+cors_origins = os.environ.get('CORS_ORIGINS', '')
+origins = []
+if frontend_url:
+    origins.append(frontend_url)
+if cors_origins:
+    origins.extend([o.strip() for o in cors_origins.split(',') if o.strip()])
+if not origins:
+    origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=origins if origins != ["*"] else ["*"],
+    allow_credentials=True if origins != ["*"] else False,
+    allow_origins=origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
